@@ -1,0 +1,61 @@
+const userInput = document.getElementById("user-input");
+const checkBtn = document.getElementById("check-btn");
+const clearBtn = document.getElementById("clear-btn");
+const resultsDiv = document.getElementById("results-div");
+
+function createPhoneRegex() {
+    const countryCode = "^(1\\s?)?";
+    const areaCode = "(\\([0-9]{3}\\)|[0-9]{3})";
+    const spacesDashes = "[\\s\\-]?";
+    const phoneNumber = "[0-9]{3}[\\s\\-]?[0-9]{4}$";
+    return new RegExp(countryCode + areaCode + spacesDashes + phoneNumber);
+}
+
+function displayResult(isValid, input) {
+    const pTag = document.createElement("p");
+    pTag.className = "results-text";
+
+    if (isValid === true) {
+        pTag.style.color = "#00471b";
+        pTag.textContent = "Valid US number: " + input;
+    } else {
+        pTag.style.color = "#4d3800";
+        pTag.textContent = "Invalid US number: " + input;
+    }
+
+    resultsDiv.appendChild(pTag);
+}
+
+function isInputEmpty(input) {
+    return input === "";
+}
+
+function checkValidNumber(input) {
+    if (isInputEmpty(input)) {
+        alert("Please provide a phone number");
+        return;
+    }
+
+    const phoneRegex = createPhoneRegex();
+    const isValid = phoneRegex.test(input);
+
+    displayResult(isValid, input);
+}
+
+checkBtn.addEventListener("click", function() {
+    const inputValue = userInput.value;
+    checkValidNumber(inputValue);
+    userInput.value = "";
+});
+
+userInput.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+        const inputValue = userInput.value;
+        checkValidNumber(inputValue);
+        userInput.value = "";
+    }
+});
+
+clearBtn.addEventListener("click", function() {
+    resultsDiv.textContent = "";
+});
